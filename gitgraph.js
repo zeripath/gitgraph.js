@@ -61,7 +61,8 @@ var gitGraph = function (canvas, rawGraphList, config) {
 		
 		for (i = 0; i < l; i++) {
 			midStr = rawGraphList[i].replace(/\s+/g, " ").replace(/^\s+|\s+$/g, "");
-			
+			midStr = midStr.replace(/(--)|(-\.)/g,'-');
+
 			maxWidth = Math.max(midStr.replace(/(\_|\s)/g, "").length, maxWidth);
 			
 			row = midStr.split("");
@@ -352,11 +353,6 @@ var gitGraph = function (canvas, rawGraphList, config) {
 				return (val !== " "  && val !== "_")
 			}).length;
 			
-			//do some clean up
-			if (flows.length > condenseCurrentLength) {
-				flows.splice(condenseCurrentLength, flows.length - condenseCurrentLength);
-			}
-			
 			colomnIndex = 0;
 			
 			//a little inline analysis and draw process
@@ -390,6 +386,7 @@ var gitGraph = function (canvas, rawGraphList, config) {
 				color = flows[colomnIndex].color;
 				
 				switch (colomn) {
+					case "-" :
 					case "_" :
 						drawLineRight(x, y, color);
 						
@@ -426,6 +423,12 @@ var gitGraph = function (canvas, rawGraphList, config) {
 			
 			y -= config.unitSize;
 		}
+
+		//do some clean up
+		if (flows.length > condenseCurrentLength) {
+			flows.splice(condenseCurrentLength, flows.length - condenseCurrentLength);
+		}
+			
 	};
 	
 	init();
